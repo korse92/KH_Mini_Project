@@ -6,16 +6,18 @@ public class Person {
 	
 	private String name;
 	private Calendar birth;
+	private String phoneNum;
 	
 	public Person() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public Person(String name, Calendar birth) {
+	
+	public Person(String name, Calendar birth, String phoneNum) {
 		super();
 		this.name = name;
 		this.birth = birth;
+		this.phoneNum = phoneNum;
 	}
 
 	public String getName() {
@@ -34,12 +36,21 @@ public class Person {
 		this.birth = birth;
 	}
 
+	public String getPhoneNum() {
+		return phoneNum;
+	}
+
+	public void setPhoneNum(String phoneNum) {
+		this.phoneNum = phoneNum;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((birth == null) ? 0 : birth.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((phoneNum == null) ? 0 : phoneNum.hashCode());
 		return result;
 	}
 
@@ -62,7 +73,19 @@ public class Person {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (phoneNum == null) {
+			if (other.phoneNum != null)
+				return false;
+		} else if (!phoneNum.equals(other.phoneNum))
+			return false;
 		return true;
-	}	
+	}
+
+	@Override
+	public String toString() {
+		return "Person [name=" + name + ", birth=" + birth + ", phoneNum=" + phoneNum + "]";
+	}
+	
+	
 
 }

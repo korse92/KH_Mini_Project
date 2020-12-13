@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 
+//아마 이건 쓸일 없을듯..?
 public class TimeOfScreen {
 	
 	private HashSet<Calendar> startTimeSet;

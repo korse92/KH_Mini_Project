@@ -12,8 +12,8 @@ public class Member extends Person {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Member(String name, Calendar birth, String id, String password) {
-		super(name, birth);
+	public Member(String name, Calendar birth, String phoneNum, String id, String password) {
+		super(name, birth, phoneNum);
 		this.id = id;
 		this.password = password;
 	}
@@ -68,7 +68,7 @@ public class Member extends Person {
 	@Override
 	public String toString() {
 		return "Member [id=" + id + ", password=" + password + ", getName()=" + getName() + ", getBirth()=" + getBirth()
-				+ "]";
+				+ ", getPhoneNum()=" + getPhoneNum() + "]";
 	}
 	
 	
