@@ -3,6 +3,10 @@ package movie.ticket.reservation.view.panel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Calendar;
 
 import javax.swing.DefaultComboBoxModel;
@@ -15,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import movie.ticket.reservation.model.vo.Member;
 import movie.ticket.reservation.util.MyUtil;
 import movie.ticket.reservation.view.MainFrame;
 
@@ -49,7 +54,7 @@ public class JoinPanel extends JPanel {
 		dobLabel.setBounds(50, 100, 70, 50);
 		
 		
-		createBirthText();	
+		createBirthText();
 		
 		JComboBox<String> cmb1 = new JComboBox<>();
 		cmb1.setModel(new DefaultComboBoxModel<String>(yearArr));
@@ -95,37 +100,77 @@ public class JoinPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				String s = null;
+				boolean isOk = false;
+
+//				BufferedWriter bw = new BufferedWriter(new FileWriter("회원명단.txt",true));
+//				BufferedReader br = new BufferedReader(new FileReader("회원명단.txt"));
+
 				String name = nameInput.getText();
 				String y = cmb1.getSelectedItem().toString();
 				String m = cmb2.getSelectedItem().toString();
 				String d = cmb3.getSelectedItem().toString();
-				String phoneFirst = phoneInput1.getText();
-				String phoneMiddle = phoneInput2.getText();
-				String phoneLast = phoneInput3.getText();
-				
+				String phone1 = phoneInput1.getText();
+				String phone2 = phoneInput2.getText();
+				String phone3 = phoneInput3.getText();
+
 				String id = idInput.getText();
 				String pw = new String(pwInput.getPassword());
 				
-				if(name.length() == 0) {
+				String phoneNum = phone1 + phone2 + phone3;
+
+				if (name.length() == 0) {
 					JOptionPane.showMessageDialog(null, "이름을 입력해주세요.");
 					return;
-				} else if(y == "year" || m == "month" || d == "date") {
+				} else if (y == "year" || m == "month" || d == "date") {
 					JOptionPane.showMessageDialog(null, "생년월일을 입력해주세요.");
+
 					return;
-				} else if (phoneFirst.length() == 0 || phoneMiddle.length() == 0 || phoneLast.length() == 0) {
+				} else if (phone1.length() == 0 || phone2.length() == 0 || phone3.length() == 0) {
 					JOptionPane.showMessageDialog(null, "전화번호를 입력해주세요.");
+
 					return;
-				} else if(id.length() == 0) {
+				} else if(phoneNum.length() != 11){
+					JOptionPane.showMessageDialog(null, "11자리 전화번호를 입력해주세요.");
+
+					return;
+				} else if (id.length() == 0) {
 					JOptionPane.showMessageDialog(null, "아이디를 입력해주세요.");
+
 					return;
-				} else if(pw.length() == 0) {
+				} else if (pw.length() == 0) {
 					JOptionPane.showMessageDialog(null, "비밀번호를 입력해주세요.");
+
 					return;
-				} else
+				} else {
+
+					Member[] users = MainFrame.rc.getUsers();
+
+					for (int i = 0; i < users.length; i++) {
+						
+						if(users[i] == null)
+							break;
+						
+						if (users[i].getId().equals(id)) {
+							JOptionPane.showMessageDialog(null, "중복된 아이디입니다.");
+							return;
+						}
+					}
+				}			
+
+				Calendar birth = Calendar.getInstance();
+				birth.set(Integer.parseInt(y), Integer.parseInt(m) - 1, Integer.parseInt(d));
+
+				MainFrame.rc.register(name, birth, phoneNum, id, pw);
+
 				JOptionPane.showMessageDialog(null, "회원가입 되었습니다.");
+				
+				mainFrame.setSize(MainPanel.FRAME_WIDTH, MainPanel.FRAME_HIGHT);
+				MyUtil.changePanel(mainFrame, JoinPanel.this, MainFrame.mainPanel);
+				MainFrame.joinPanel = new JoinPanel(mainFrame);
+
 			}
-			
+
 		});
 		
 		JButton backbtn = new JButton("뒤로 가기");
@@ -134,7 +179,7 @@ public class JoinPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mainFrame.setSize(MainPanel.FRAME_X, MainPanel.FRAME_Y);
+				mainFrame.setSize(MainPanel.FRAME_WIDTH, MainPanel.FRAME_HIGHT);
 				MyUtil.changePanel(mainFrame, JoinPanel.this, MainFrame.mainPanel);
 				MainFrame.joinPanel = new JoinPanel(mainFrame);
 			}
@@ -193,9 +238,4 @@ public class JoinPanel extends JPanel {
 		
 	}
 	
-//	public static void main(String[] args) {
-//		new Join(500, 500, 500, 500).setVisible(true);
-//
-//
-//	}
 }

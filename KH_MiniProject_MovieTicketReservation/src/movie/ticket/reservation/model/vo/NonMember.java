@@ -15,12 +15,11 @@ public class NonMember extends Person{
 		super(null, birth, phoneNum);
 		
 		this.password = password;
-	
-		String[] pNumArr = super.getPhoneNum().split("-");	
-		String lastPhoneNum = pNumArr[2];
+			
+		String lastPhoneNum = super.getPhoneNum().substring(7);
 		String birthStr = ""+ birth.get(Calendar.YEAR) + (birth.get(Calendar.MONTH)+1) + birth.get(Calendar.DATE);
 		
-		super.setName(birthStr + lastPhoneNum);
+		super.setName("비회원" + birthStr + lastPhoneNum);
 		
 	}
 

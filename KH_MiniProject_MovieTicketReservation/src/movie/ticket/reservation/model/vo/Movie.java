@@ -51,12 +51,12 @@ public class Movie {
 		return theaterSet.remove(t);
 	}
 	
-	public Theater getTheaterSet(Theater t) {
+	public Theater getTheater(String theaterName) {
 		Iterator<Theater> iter = theaterSet.iterator();
 		
 		while(iter.hasNext()) {
 			Theater value = iter.next();
-			if(t.equals(value))
+			if(theaterName.equals(value.getTheaterName()))
 				return value;
 		}
 		

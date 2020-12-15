@@ -24,12 +24,12 @@ public class Theater {
 		return screenSet.remove(s);
 	}
 	
-	public Screen getScreen(Screen s) {
+	public Screen getScreen(String screenName) {
 		Iterator<Screen> iter = screenSet.iterator();
 		
 		while(iter.hasNext()) {
 			Screen value = iter.next();
-			if(s.equals(value))
+			if(screenName.equals(value.getScreenName()))
 				return value;
 		}
 		
@@ -42,7 +42,7 @@ public class Theater {
 	public void setTheaterName(String theaterName) {
 		this.theaterName = theaterName;
 	}
-	public HashSet<Screen> getScreenList() {
+	public HashSet<Screen> getScreenSet() {
 		return screenSet;
 	}
 	public void setScreenSet(HashSet<Screen> screenSet) {
@@ -53,9 +53,11 @@ public class Theater {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((screenSet == null) ? 0 : screenSet.hashCode());
 		result = prime * result + ((theaterName == null) ? 0 : theaterName.hashCode());
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -65,6 +67,11 @@ public class Theater {
 		if (getClass() != obj.getClass())
 			return false;
 		Theater other = (Theater) obj;
+		if (screenSet == null) {
+			if (other.screenSet != null)
+				return false;
+		} else if (!screenSet.equals(other.screenSet))
+			return false;
 		if (theaterName == null) {
 			if (other.theaterName != null)
 				return false;
@@ -72,9 +79,12 @@ public class Theater {
 			return false;
 		return true;
 	}
+	
 	@Override
 	public String toString() {
 		return "Theater [theaterName=" + theaterName + "]";
-	}	
+	}
+	
+	
 	
 }

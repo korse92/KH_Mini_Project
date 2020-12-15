@@ -10,9 +10,9 @@ public class Screen {
 	//메소드로 컬렉션에 add/remove 해주는 메소드 있으면 편할듯 
 	private String screenName;
 	private int totalSeat;
-	private HashMap<Calendar, boolean[]> timeHashMap = new HashMap<>(); // 상영시간(key), 좌석상태(value)
+	private HashMap<Calendar, boolean[]> timeHashMap = new HashMap<>(); // 상영시작시간(key), 좌석상태(value)
 		
-	public Screen() {
+	public Screen() {		
 		super();
 	}
 	
@@ -30,8 +30,8 @@ public class Screen {
 		timeHashMap.remove(c);		
 	}
 	
-	public boolean[] getValueTimeHashMap(Calendar c) {
-		return timeHashMap.get(c);
+	public boolean[] getValueTimeHashMap(Calendar movieStartTime) {
+		return timeHashMap.get(movieStartTime);
 	}
 	
 	public Set<Calendar> getKeySetTimeHashMap() {

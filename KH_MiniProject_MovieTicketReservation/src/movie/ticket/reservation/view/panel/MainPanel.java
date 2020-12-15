@@ -23,18 +23,17 @@ import movie.ticket.reservation.view.MainFrame;
 
 public class MainPanel extends JPanel {
 	
-	public static final int FRAME_X = 450;
-	public static final int FRAME_Y = 600;
+	public static final int FRAME_WIDTH = 450;
+	public static final int FRAME_HIGHT = 600;
 	
 	
 	private JFrame mainFrame;
 	
 	public MainPanel(JFrame f) {
-//		MyUtil.init(this, x, y, width, height);
 		this.mainFrame = f;
 		
 		f.setTitle("cgw에 오신걸 환영합니다.");
-		f.setSize(FRAME_X, FRAME_Y);
+		f.setSize(FRAME_WIDTH, FRAME_HIGHT);
 				
 		JLabel label = new JLabel();
 						
@@ -50,12 +49,11 @@ public class MainPanel extends JPanel {
 		gbc_icon.gridx = 0;
 		gbc_icon.gridx = 0;
 		gbc_icon.gridwidth = 2;
-//				Image img = icon.getImage();
-//				img = img.getScaledInstance(10, 10, Image.SCALE_DEFAULT);
+//		Image img = icon.getImage();
+//		img = img.getScaledInstance(10, 10, Image.SCALE_DEFAULT);
 		label.setIcon(icon);
 		
-		this.add(label, gbc_icon);
-//		add(this);
+		add(label, gbc_icon);
 		
 		//버튼
 		JButton[] btn = new JButton[3];
@@ -104,7 +102,7 @@ public class MainPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 //				JOptionPane.showMessageDialog(null, "회원입니다.");
-				mainFrame.setSize(LoginPanel.FRAME_X, LoginPanel.FRAME_Y);
+				mainFrame.setSize(LoginPanel.FRAME_WIDTH, LoginPanel.FRAME_HEIGHT);
 				MainFrame.loginPanel.tabbedPaneSelIdx(0); //회원 로그인탭으로 전환
 				MyUtil.changePanel(mainFrame, MainPanel.this, MainFrame.loginPanel);
 			}
@@ -114,7 +112,7 @@ public class MainPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 //				JOptionPane.showMessageDialog(null, "비회원입니다.");
-				mainFrame.setSize(LoginPanel.FRAME_X, LoginPanel.FRAME_Y);
+				mainFrame.setSize(LoginPanel.FRAME_WIDTH, LoginPanel.FRAME_HEIGHT);
 				MainFrame.loginPanel.tabbedPaneSelIdx(1); //비회원 로그인탭으로 전환
 				MyUtil.changePanel(mainFrame, MainPanel.this, MainFrame.loginPanel);
 			}
