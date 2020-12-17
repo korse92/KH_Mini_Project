@@ -24,10 +24,16 @@ import movie.ticket.reservation.model.vo.Theater;
 public class ReservationController {
 	
 	private HashSet<Movie> movieSet = new HashSet<>(); //추후 파일 입출력할때 이 해쉬셋을 저장예정
+	
+	//예약데이터는 HashCode같은 고유한값(예약번호)을 필드로 가지게하면 좋을듯
 	private HashMap<Person, HashSet<ReservedData>> memHashMap = new HashMap<>(); // 로그인 기능때 사용할 회원목록 (value로 예약정보)
 	private HashMap<Person, HashSet<ReservedData>> nonMemHashMap = new HashMap<>(); // 로그인 기능때 사용할 비회원목록 (value로 예약정보)
-	private Member[] users = new Member[100]; //회원저장하기 위한 저장배열
+	
+	//회원객체를 Set에 add했을때 false나오면 중복이라고 알려주기
+	//비회원객체는 반대로 true일때는 비회원객체를 저장해주고, false일때는 저장안하고 로그인시켜주기
+	private Member[] users = new Member[100]; //회원저장하기 위한 저장배열 -> Set으로 바꿔주면 길이지정할 필요없고 중복비교 훨씬 쉬울듯
 	private NonMember[] noUsers = new NonMember[100]; //비회원
+	//
 	private int memIndex = 0;
 	private int nonMemIndex = 0;
 	
@@ -39,7 +45,7 @@ public class ReservationController {
 	private ArrayList<Calendar> targetCalendarList = new ArrayList<>(); //이거세개는 메소드 호출되면서 저장중임
 	
 	private Movie selectedMovie; //getTheaterList메소드 호출하면
-	private Theater selectedTheater; //getTargetCalendarList메소드 호출하면
+	private Theater selectedTheater; //getTargetYear메소드 호출하면서 getTargetCalendarList메소드 호출
 	private Screen selectedScreen; //selectSeat메소드 호출하면
 	private Calendar selectedCalendar; //selectSeat메소드 호출하면
 	
@@ -48,9 +54,11 @@ public class ReservationController {
 	
 	//테스트용 데이터
 	{
-		Member testMem = new Member("d", null, null, "a", "a");
-		users[99] = testMem;
-		Calendar[] calArr = new Calendar[10];
+		
+		register("홍길동", new GregorianCalendar(1999, 12, 12), "01056785678", "user1", "1234");
+		register2(new GregorianCalendar(1999, 12, 12), "01012341234", "1234");
+		
+		Calendar[] calArr = new Calendar[50];
 				
 		for(int i = 0; i < 5; i++) {
 			
@@ -74,14 +82,14 @@ public class ReservationController {
 				Theater t = new Theater("영화관"+(j+1));
 				
 				for(int k = 0; k < 5; k++) {					
-					char ranChar = (char)((int)(Math.random()*('Z'-'A'))+'A');
-					int ranSeatNum = (int)(Math.random()*4) * 3 + 40;
+					char ranChar = (char)((int)(Math.random()*3)+'A');
+					int ranSeatNum = (int)((Math.random()*2)+1) * 5 + 40;
 					Screen s = new Screen("스크린"+ranChar, ranSeatNum);
 					for(Calendar c : calArr) {
-						int rndYear = (int)(Math.random()*2)+2020;
-						int rndMonth = (int)(Math.random()*3)+9;
-						int rndDay = (int)(Math.random()*2)+15;
-						int rndHour = (int)(Math.random()*4)+12;
+						int rndYear = (int)(Math.random()*1)+2020;
+						int rndMonth = (int)(Math.random()*1)+11;
+						int rndDay = (int)(Math.random()*2)+16;
+						int rndHour = (int)(Math.random()*4)+8;
 						int rndMin = (int)(Math.random()*2)*30;
 						
 						c = new GregorianCalendar(rndYear, rndMonth, rndDay, rndHour, rndMin);
@@ -184,7 +192,7 @@ public class ReservationController {
 		
 	}
 	
-	public int[] getYearSet(String theaterName) {
+	public int[] getTargetYear(String theaterName) {
 		
 		getTargetCalendarList(theaterName);
 		

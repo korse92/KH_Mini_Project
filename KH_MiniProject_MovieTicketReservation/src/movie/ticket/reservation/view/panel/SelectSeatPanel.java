@@ -24,7 +24,7 @@ public class SelectSeatPanel extends JPanel {
 	private JFrame mainFrame;
 	private Color color = new Color(242,240,229);
 	
-	private boolean[] seat = new boolean[100]; //실프로그램에서는 스크린객체에서 배열주소값을 넘겨받아야 함.
+	private boolean[] seat = new boolean[85]; //실프로그램에서는 스크린객체에서 배열주소값을 넘겨받아야 함.
 	
 	private JButton[] adultBtnArr = new JButton[10];
 	private JButton[] teenBtnArr = new JButton[10];

@@ -1,6 +1,7 @@
 package movie.ticket.reservation.view.panel;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -32,6 +33,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerListModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -39,13 +41,12 @@ import javax.swing.event.ListSelectionListener;
 
 import movie.ticket.reservation.comp.ScreenNameAscending;
 import movie.ticket.reservation.model.vo.Screen;
-import movie.ticket.reservation.util.MyUtil;
 import movie.ticket.reservation.view.MainFrame;
 
 public class SelectionMoviePanel extends JPanel {
 
 	public static final int FRAME_WIDTH = 1400;
-	public static final int FRAME_HEIGHT = 662;
+	public static final int FRAME_HEIGHT = 645;
 
 	JButton[] dayBtnArr;
 
@@ -98,7 +99,7 @@ public class SelectionMoviePanel extends JPanel {
 	private JPanel timeTablePanel;
 	JScrollPane timeTableJPanel;
 
-	ArrayList<CustumTimePane> timePaneArrList = new ArrayList<>();
+	
 
 	private JFrame mainFrame;
 
@@ -412,12 +413,13 @@ public class SelectionMoviePanel extends JPanel {
 		JPanel timePanel = new JPanel();
 
 		timePanel.setBackground(new Color(242, 240, 229));
-		timePanel.setBounds(datePanel.getX() + datePanel.getWidth() + 1, 0, 350, 606);
+		int widthTimePane = FRAME_WIDTH - datePanel.getX() - datePanel.getWidth() - 20;
+		timePanel.setBounds(datePanel.getX() + datePanel.getWidth() + 1, 0, widthTimePane, 606);
 		add(timePanel);
 		timePanel.setLayout(null);
 
 		JPanel panelTimeTitle = new JPanel();
-		panelTimeTitle.setBounds(0, 0, 376, 47);
+		panelTimeTitle.setBounds(0, 0, widthTimePane, 47);
 		panelTimeTitle.setLayout(null);
 		panelTimeTitle.setBackground(new Color(51, 51, 51));
 		timePanel.add(panelTimeTitle);
@@ -426,7 +428,7 @@ public class SelectionMoviePanel extends JPanel {
 		timeTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		timeTitle.setForeground(Color.WHITE);
 		timeTitle.setFont(new Font("맑은 고딕", Font.BOLD, 18));
-		timeTitle.setBounds(0, 0, 376, 47);
+		timeTitle.setBounds(0, 0, widthTimePane, 47);
 		panelTimeTitle.add(timeTitle);
 
 		timeTablePanel = new JPanel();
@@ -438,7 +440,7 @@ public class SelectionMoviePanel extends JPanel {
 		int timeTableHeight = timePanel.getHeight() - panelTimeTitle.getHeight();
 
 		Dimension size = new Dimension();// 사이즈를 지정하기 위한 객체 생성
-		size.setSize(1000, 1000);// 객체의 사이즈를 지정
+		size.setSize(timeTaBleWidth+500, timeTableHeight+500);// 객체의 사이즈를 지정
 		timeTablePanel.setPreferredSize(size);// 사이즈 정보를 가지고 있는 객체를 이용해 패널의 사이즈 지정
 
 		timeTableJPanel = new JScrollPane(timeTablePanel); // timeTablePanel이 화면에서 보이는거임 (스크롤은 배경)
@@ -457,18 +459,16 @@ public class SelectionMoviePanel extends JPanel {
 	}
 
 	public class DayOfCalendarBtnActionListener implements ActionListener {
+		
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
+			
+			timeTablePanel.removeAll();
 
 			int x = 0;
 			int y = 0;
-
-			int idx = 0;
-
-			timeTablePanel.removeAll();
-			timePaneArrList.clear();
 
 			for (int i = 0; i < dayBtnArr.length; i++) {
 				if (dayBtnArr[i].isEnabled()) {
@@ -483,33 +483,31 @@ public class SelectionMoviePanel extends JPanel {
 			int month = (Integer) monthComboBox.getSelectedItem();
 			int day = Integer.parseInt(btn.getText());
 
-			HashMap<Screen, HashMap<Calendar, boolean[]>> targetScreen = MainFrame.rc.getScreenOfMonthDay(year, month,
-					day);
-
-			CustumTimePane prePane = null;
+			HashMap<Screen, HashMap<Calendar, boolean[]>> targetScreen = MainFrame.rc.getScreenOfMonthDay(year, month, day);
+			
 			ArrayList<Screen> targetScreenKey = new ArrayList<>(targetScreen.keySet());
-			Collections.sort(targetScreenKey, new ScreenNameAscending());
+			Collections.sort(targetScreenKey, new ScreenNameAscending()); //스크린 이름순 정렬
+			
 			for (Screen s : targetScreenKey) {
 				HashMap<Calendar, boolean[]> targetTime = targetScreen.get(s);
 				if (!targetTime.isEmpty()) {
-
+					
 					x = 0;
-					timePaneArrList.clear();
-					idx = 0;
-					System.out.println("--------------------");
-
-					System.out.println(s.getScreenName()); // UI에 사용할 스크린 이름
+					CustumTimePane prePane = null;
 
 					ArrayList<Calendar> targetTimeKey = new ArrayList<>(targetTime.keySet());
 					Collections.sort(targetTimeKey);
+					
 					for (Calendar c : targetTimeKey) {
+						
+//						System.out.println(s.getScreenName()); // UI에 사용할 스크린 이름
 						CustumTimePane timePane = new CustumTimePane(s.getScreenName());
 						timePane.setTargetTime(c);
 
 						JTextArea timeTextArea = new JTextArea();
 						timeTextArea.setEditable(false);
 						timeTextArea.setBackground(paneColor);
-						String str = c.get(Calendar.HOUR_OF_DAY) + "시" + c.get(Calendar.MINUTE) + "분 상영\n";
+						String str = c.get(Calendar.HOUR_OF_DAY) + "시 " + c.get(Calendar.MINUTE) + "분 상영\n";
 
 						boolean[] seat = targetTime.get(c);
 						timePane.setSeat(seat);
@@ -522,7 +520,7 @@ public class SelectionMoviePanel extends JPanel {
 						str += "예약된 좌석 수 : " + (s.getTotalSeat() - emptySeatNum) + "\n";
 						str += "남은 좌석수 : " + emptySeatNum + "\n";
 
-						System.out.println(str);
+//						System.out.println(str);
 
 						timeTextArea.setText(str);
 						timePane.add(timeTextArea);
@@ -531,31 +529,25 @@ public class SelectionMoviePanel extends JPanel {
 						selectBtn.addActionListener(new SelectTimeBtnActionListener());
 						timePane.add(selectBtn);
 
-						if (!timePaneArrList.isEmpty()) {
-							x = prePane.getX() + prePane.getWidth() + 10;
+						if (prePane != null) { //맨 첫패널이 생길때 좌표값을 계산하지 않기 위한 조건
+							// (직전패널의 X좌표) + (직전패널의 너비) + (패널사이의 간격값 지정)
+							x = prePane.getX() + prePane.getWidth() + 10; // X 좌표 계산
 						}
 
 						timePane.setBounds(x, y, 150, 150);
-						System.out.println("x : " + x);
-						System.out.println("y : " + y);
+//						System.out.println("x : " + x);
+//						System.out.println("y : " + y);
 
-						timeTablePanel.add(timePane);
-						timePaneArrList.add(timePane);
+						timeTablePanel.add(timePane); 
 						
-						if(!timePaneArrList.isEmpty()) {
-							prePane = timePaneArrList.get(idx++);
-							System.out.println("idx : " + idx);
-						}
-
+						prePane = timePane; // 첫패널을 패널에 추가하고 난 다음에 직전 패널 객체정보 저장 
 					}
-					System.out.println("--------------------");
-					if (!timePaneArrList.isEmpty()) {
-						y = prePane.getY() + prePane.getHeight() + 10;
-					}
-
+					//가로축 패널을 다 그리고 난 다음에 Y값 계산을 해준다.
+					//직전패널의 Y값
+					y = prePane.getY() + prePane.getHeight() + 10; //Y좌표값 계산
 				}
 			}
-
+			//패널이 모두 추가되면 다시 그려주기 작업
 			revalidate();
 			repaint();
 		}
@@ -567,8 +559,33 @@ public class SelectionMoviePanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			mainFrame.setSize(SelectSeatPanel.FRAME_WIDTH, SelectSeatPanel.FRAME_HEIGHT);
-			MyUtil.changePanel(mainFrame, SelectionMoviePanel.this, MainFrame.selectSeatPanel);
+//			mainFrame.setSize(SelectSeatPanel.FRAME_WIDTH, SelectSeatPanel.FRAME_HEIGHT);
+//			MyUtil.changePanel(mainFrame, SelectionMoviePanel.this, MainFrame.selectSeatPanel);
+			JButton selectBtn = (JButton)e.getSource();
+			CustumTimePane timePane = (CustumTimePane)selectBtn.getParent();
+			
+			Component[] timePaneComArr =timePane.getComponents();
+			
+			String startTime = null;
+			
+			for(Component c : timePaneComArr)
+				if(c instanceof JTextArea) {
+					String[] textAreaText = ((JTextArea) c).getText().split("\n");
+					System.out.println(Arrays.toString(textAreaText));
+					startTime = textAreaText[0].trim(); //공백제거했으니 substring으로 가져오면됨
+			}
+			
+			String screenName = timePane.getScreenName();
+			String[] hourStr = startTime.split("시");
+			String[] minuteStr = hourStr[1].split("분");
+//			int hour = Integer.parseInt(hourStr[0]);
+//			int minute = Integer.parseInt(minuteStr[0]);
+			
+			System.out.println(hourStr[0]);
+			System.out.println(minuteStr[1]);
+			
+			
+			
 			
 		}
 		
@@ -722,7 +739,7 @@ public class SelectionMoviePanel extends JPanel {
 //			theaterTextField.setText(theaterName);
 			
 
-			yearArr = Arrays.stream(MainFrame.rc.getYearSet(theaterName)).boxed().toArray(Integer[]::new);
+			yearArr = Arrays.stream(MainFrame.rc.getTargetYear(theaterName)).boxed().toArray(Integer[]::new);
 			yearListModel = new SpinnerListModel(yearArr);
 			yearSpinner.setModel(yearListModel);
 

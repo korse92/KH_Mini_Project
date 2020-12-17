@@ -204,27 +204,24 @@ public class LoginPanel extends JPanel {
 
 					for (int i = 0; i < noUsers.length; i++) {
 
-						if (noUsers[i] == null) {
-							break;
-						}
-
-						if (noUsers[i].getPhoneNum().equals(phone) && noUsers[i].getPassword().equals(pw)) {
-							JOptionPane.showMessageDialog(null, "로그인 성공!");
-							MainFrame.rc.login(noUsers[i]);
-							// 여기 다음에 화면을 ReservationMain 패널로 바꿔주는 코드 넣어줘야함.
-						} else {
+						if(noUsers[i] == null) {
 							Calendar birth = Calendar.getInstance();
 							birth.set(Integer.parseInt(year), Integer.parseInt(month) - 1, Integer.parseInt(date));
 							NonMember user = MainFrame.rc.register2(birth, phone, pw);
 							MainFrame.rc.login(user);
-							JOptionPane.showMessageDialog(null, "새로 오신것을 환영합니다!\n로그인 성공!");							
-						}
-						
-						// 여기 다음에 화면을 ReservationMain 패널로 바꿔주는 코드 넣어줘야함.
-						mainFrame.setSize(ReservationMainPanel.FRAME_WIDTH, ReservationMainPanel.FRAME_HEIGHT);
-						MyUtil.changePanel(mainFrame, LoginPanel.this, MainFrame.reservationMain);
-						MainFrame.loginPanel = new LoginPanel(mainFrame);
+							JOptionPane.showMessageDialog(null, "새로 오신것을 환영합니다!\n로그인 성공!");
+							break;
+						} else if (noUsers[i].getPhoneNum().equals(phone) && noUsers[i].getPassword().equals(pw)) {
+							JOptionPane.showMessageDialog(null, "로그인 성공!");
+							MainFrame.rc.login(noUsers[i]);
+							// 여기 다음에 화면을 ReservationMain 패널로 바꿔주는 코드 넣어줘야함.
+							break;
+						}						
 					}
+					// 여기 다음에 화면을 ReservationMain 패널로 바꿔주는 코드 넣어줘야함.
+					mainFrame.setSize(ReservationMainPanel.FRAME_WIDTH, ReservationMainPanel.FRAME_HEIGHT);
+					MyUtil.changePanel(mainFrame, LoginPanel.this, MainFrame.reservationMain);
+					MainFrame.loginPanel = new LoginPanel(mainFrame);
 
 				}
 

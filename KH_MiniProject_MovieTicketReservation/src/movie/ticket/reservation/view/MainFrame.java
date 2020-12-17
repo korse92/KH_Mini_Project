@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
 	public static ReservationMainPanel reservationMain;
 	public static SelectSeatPanel selectSeatPanel;
 	
-	
+	public static boolean[] selectedSeat;	
 	
 	public MainFrame(int x, int y, int width, int height) {
 		
@@ -43,13 +43,13 @@ public class MainFrame extends JFrame {
 		bookingDetailPayPanel = new BookingDetailPayPanel(this); //결제
 		movieTicketView = new MovieTicketViewPanel(this); //영화티켓확인
 
-		add(mainPanel);//메인//
-//		add(joinPanel);//회원가입//
-//		add(selectionMovie);//영화선택
-//		add(bookingDetailPayPanel);//결제창/
-//		add(movieTicketView);//영화티켓//
-//		add(reservationMain);//영화예매/확인창//
-//		add(selectSeatPanel);//좌석/
+		add(mainPanel); //메인
+//		add(joinPanel); //회원가입
+//		add(reservationMain); //영화예매/확인 선택창
+		add(selectionMovie); //영화선택
+//		add(selectSeatPanel); //좌석
+//		add(bookingDetailPayPanel); //결제창
+//		add(movieTicketView); //영화티켓
 		
 		//화면 가운데 위치 시키기
 		setLocationRelativeTo(null);
